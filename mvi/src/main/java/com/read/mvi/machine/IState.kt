@@ -1,4 +1,4 @@
-package com.read.mvi
+package com.read.mvi.machine
 
 import android.util.Log
 

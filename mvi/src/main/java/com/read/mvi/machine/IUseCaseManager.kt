@@ -1,7 +1,7 @@
-package com.read.mvi
+package com.read.mvi.machine
 
 import kotlinx.coroutines.flow.Flow
 
-interface IUseCaseFactory {
+interface IUseCaseManager {
     suspend fun get(state: IState): Flow<IIntent>?
 }

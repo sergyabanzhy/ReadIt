@@ -1,16 +1,15 @@
-package com.autodoc.m13Base.either
+package com.read.mvi.either
 
 sealed class Either<out L, out R> {
-    /** * Represents the left side of [Either] class which by convention is a "Failure". */
+
     data class Left<out L>(val a: L) : Either<L, Nothing>()
-    /** * Represents the right side of [Either] class which by convention is a "Success". */
     data class Right<out R>(val b: R) : Either<Nothing, R>()
 
     val isRight get() = this is Right<R>
     val isLeft get() = this is Left<L>
 
-    fun <L> leftRes(a: L) = Either.Left(a)
-    fun <R> rightRes(b: R) = Either.Right(b)
+    fun <L> leftRes(a: L) = Left(a)
+    fun <R> rightRes(b: R) = Right(b)
 
     inline fun either(error: (L) -> Any, result: (R) -> Any): Any =
         when (this) {

@@ -1,7 +1,7 @@
-package com.read.mvi.repo
+package com.read.readit.repo
 
 import android.util.Log
-import com.autodoc.m13Base.either.Either
+import com.read.mvi.either.Either
 import kotlinx.coroutines.delay
 
 class Repo: IRepo {

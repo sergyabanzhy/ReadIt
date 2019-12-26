@@ -1,6 +1,6 @@
-package com.read.mvi.repo
+package com.read.readit.repo
 
-import com.autodoc.m13Base.either.Either
+import com.read.mvi.either.Either
 
 interface IRepo {
     suspend fun doJob(): Either<String, String>

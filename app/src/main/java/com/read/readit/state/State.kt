@@ -1,7 +1,7 @@
-package com.read.mvi.state
+package com.read.readit.state
 
-import com.read.mvi.IIntent
-import com.read.mvi.IState
+import com.read.mvi.machine.IIntent
+import com.read.mvi.machine.IState
 import com.read.mvi.intent.Intent
 import java.lang.RuntimeException
 

@@ -1,10 +1,12 @@
 package com.read.mvi.intent
 
-import com.read.mvi.IIntent
+import com.read.mvi.machine.IIntent
 
 sealed class Intent: IIntent {
 
     object Idle: Intent()
+
+    object Error: Intent()
 
     data class Fetched(val string: String): Intent()
 

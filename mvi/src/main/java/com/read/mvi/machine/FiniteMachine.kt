@@ -1,8 +1,9 @@
-package com.read.mvi
+package com.read.mvi.machine
 
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import com.read.mvi.actionExecutor.IActionExecutor
 
 abstract class FiniteMachine<S : IStateStorage<IState>, SE : IActionExecutor>(private val storage: IStateStorage<IState>, private val executor: IActionExecutor) {
 

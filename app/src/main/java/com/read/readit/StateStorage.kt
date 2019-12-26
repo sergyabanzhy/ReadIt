@@ -1,12 +1,14 @@
-package com.read.mvi
+package com.read.readit
 
 import androidx.annotation.MainThread
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.read.mvi.machine.IStateStorage
 
 
-open class StateStorage<S>(initial: S): MutableLiveData<S>(initial), IStateStorage<S> {
+open class StateStorage<S>(initial: S): MutableLiveData<S>(initial),
+    IStateStorage<S> {
 
     override val state: S
     get() = value ?: throw IllegalStateException("Stored state can not be null")
