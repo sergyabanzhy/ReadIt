@@ -12,7 +12,7 @@ interface IState {
 }
 
 inline fun <T : IState> (T).onMutated(function: (T) -> Unit): T {
-    if (isAllowedState()) function.invoke(this)
+    if (isAllowedState()) function(this)
     return this
 }
 
@@ -22,6 +22,6 @@ inline fun <T : IState> (T).onMutationIllegal(function: () -> Unit) {
             "State mutation right:",
             "onMutationIllegal - Intent $this can not impact current state $this."
         )
-        function.invoke()
+        function()
     }
 }

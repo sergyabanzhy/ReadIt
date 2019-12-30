@@ -5,12 +5,17 @@ import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.ViewModelProviders
 import com.read.mvi.intent.Intent
-import com.read.mvi.machine.IState
-import com.read.readit.state.State
+import com.read.readit.state.StateScreen1
 import com.read.readit.viewModel.TestViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.InternalCoroutinesApi
 
-class MainActivity : AppCompatActivity(), ViewState<TestViewModel> {
+@ExperimentalCoroutinesApi
+@FlowPreview
+@InternalCoroutinesApi
+class MainActivity : AppCompatActivity(), ViewState<StateScreen1, TestViewModel> {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,23 +24,25 @@ class MainActivity : AppCompatActivity(), ViewState<TestViewModel> {
         observeViewState(this)
 
         tv.setOnClickListener {
-            trigger(Intent.Trigger)
+            trigger(Intent.LoadSmth)
         }
 
         tv2.setOnClickListener {
-            trigger(Intent.Trigger)
+            trigger(Intent.LoadSmth)
         }
     }
 
-    override fun render(state: IState) {
+    override fun render(state: StateScreen1) {
         when(state) {
-            is State.Fetching -> Log.d("MainActivity", "Fetching")
-            is State.Fetching2 -> Log.d("MainActivity", "Fetching2")
-            is State.Idle -> Log.d("MainActivity", "Idle")
+            is StateScreen1.Fetching -> Log.d("MainActivity", "Fetching")
+            is StateScreen1.Fetching2 -> Log.d("MainActivity", "Fetching2")
+            is StateScreen1.Fetched1 -> Log.d("MainActivity", "Fetched1")
+            is StateScreen1.Fetched2 -> Log.d("MainActivity", "Fetched2")
+            is StateScreen1.Idle -> Log.d("MainActivity", "Idle")
         }
     }
 
-    override fun provideViewModel(): TestViewModel {
-        return ViewModelProviders.of(this).get(TestViewModel::class.java)
+    override val viewModel: TestViewModel by lazy {
+        ViewModelProviders.of(this).get(TestViewModel::class.java)
     }
 }

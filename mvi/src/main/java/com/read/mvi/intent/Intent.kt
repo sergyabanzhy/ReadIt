@@ -12,5 +12,5 @@ sealed class Intent: IIntent {
 
     data class Fetched2(val string: String): Intent()
 
-    object Trigger: Intent()
+    object LoadSmth: Intent()
 }

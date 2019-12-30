@@ -2,25 +2,52 @@ package com.read.readit
 
 import android.util.Log
 import com.read.mvi.actionExecutor.IActionExecutor
+import com.read.mvi.intent.Intent
 import com.read.mvi.machine.IIntent
 import com.read.mvi.machine.IState
-import com.read.mvi.machine.IUseCaseManager
+import com.read.readit.repo.IRepo
+import com.read.readit.state.StateScreen1
+import com.read.readit.useCase.UseCase
+import com.read.readit.useCase.UseCase2
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
 
-open class ActionExecutor(private val factory: IUseCaseManager, private val scope: CoroutineScope):
-    IActionExecutor {
+open class ActionExecutor(private val repo: IRepo, private val scope: CoroutineScope): IActionExecutor<StateScreen1> {
 
-    override fun executeAction(state: IState, newIntent: ((IIntent) -> Unit)) {
+    override fun executeAction(state: StateScreen1, newIntent: suspend ((IIntent) -> Unit)) {
         Log.d("ActionExecutor", "executeAction")
 
         scope.launch((Dispatchers.IO)) {
-            factory.get(state)?.collect {
-                Log.d("ActionExecutor collect", "$it")
+
+            get(state)?.run {
+                Log.d("ActionExecutor collect", "$this")
                 withContext(Dispatchers.Main) {
-                    newIntent.invoke(it)
+                    newIntent.invoke(this@run)
                 }
             }
         }
+    }
+
+    suspend fun get(state: IState): IIntent? {
+
+        var intent: IIntent? = null
+
+        when (state) {
+            is StateScreen1.Fetching ->
+
+                UseCase(repo).execute().right {
+                    intent = Intent.Fetched(it)
+                }.left {
+                    intent = Intent.Error
+                }
+
+            is StateScreen1.Fetching2 ->
+                UseCase2(repo).execute().right {
+                    intent = Intent.Fetched2(it)
+                }.left {
+                    intent = Intent.Error
+                }
+        }
+
+        return intent
     }
 }

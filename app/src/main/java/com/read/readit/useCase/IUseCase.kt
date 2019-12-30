@@ -2,6 +2,6 @@ package com.read.readit.useCase
 
 import com.read.mvi.either.Either
 
-interface IUseCase {
-    suspend fun execute(): Either<String, String>
+interface IUseCase<E, S> {
+    suspend fun execute(): Either<E, S>
 }

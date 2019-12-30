@@ -1,32 +1,41 @@
 package com.read.mvi.machine
 
 import android.util.Log
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import com.read.mvi.actionExecutor.IActionExecutor
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 
-abstract class FiniteMachine<S : IStateStorage<IState>, SE : IActionExecutor>(private val storage: IStateStorage<IState>, private val executor: IActionExecutor) {
+@Suppress("UNCHECKED_CAST")
+@ExperimentalCoroutinesApi
+@FlowPreview
+@InternalCoroutinesApi
+abstract class FiniteMachine<S: IState>(private var storage: ConflatedBroadcastChannel<S>, private val executor: IActionExecutor<S>) {
 
-    fun triggerWith(intent: IIntent) {
+    suspend fun triggerWith(intent: IIntent) {
 
-        val oldState = storage.state
+        val oldState = storage.value
 
-        oldState.mutate(intent).onMutated { newState ->
+        oldState.mutate(intent).onMutated { newState  ->
 
-            Log.d(getTag(), "onMutated with intent ${intent::class.java.simpleName}, oldState ${oldState::class.java.simpleName} -> newState ${newState::class.java.simpleName}")
-            storage.storeState(newState)
+            Log.d(getTag(), "intent ${intent::class.java.simpleName}, " +
+                    "oldState ${oldState::class.java.simpleName} -> newState ${newState::class.java.simpleName}")
+            storage.offer(newState as S)
 
-            executor.executeAction(storage.state) {
+            executor.executeAction(storage.value) {
                 triggerWith(it)
             }
 
-        }.onMutationIllegal {
-            Log.e(getTag(), "onMutationIllegal with intent ${intent::class.java.simpleName}, oldState ${oldState::class.java.simpleName}")
+            }.onMutationIllegal {
+                Log.e(getTag(), "onMutationIllegal with intent ${intent::class.java.simpleName}, oldState ${oldState::class.java.simpleName}")
+            }
         }
-    }
 
-    fun observeState(viewLifecycleOwner: LifecycleOwner, observer: Observer<IState>) {
-        storage.observeState(viewLifecycleOwner, observer)
+    fun state(): Flow<S> {
+        return storage.asFlow()
     }
 
     abstract fun getTag(): String

@@ -1,15 +1,18 @@
 package com.read.readit.viewModel
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.read.mvi.actionExecutor.IActionExecutor
-import com.read.mvi.machine.FiniteMachine
-import com.read.mvi.machine.IState
-import com.read.mvi.machine.IStateStorage
 import com.read.readit.IStateViewModel
-import com.read.readit.Machine
+import com.read.readit.ConcreteStateMachine
+import com.read.readit.state.StateScreen1
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.InternalCoroutinesApi
 
-class TestViewModel : ViewModel(), IStateViewModel<Machine> {
-
-    override val stateMachine: Machine = Machine(viewModelScope)
+@ExperimentalCoroutinesApi
+@FlowPreview
+@InternalCoroutinesApi
+class TestViewModel:  IStateViewModel<StateScreen1>() {
+    override val stateMachine: ConcreteStateMachine = ConcreteStateMachine(viewModelScope, StateScreen1.Idle)
+    override val scope: CoroutineScope = viewModelScope
 }

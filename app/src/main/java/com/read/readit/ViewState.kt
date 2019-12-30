@@ -2,24 +2,39 @@ package com.read.readit
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import com.read.mvi.machine.IIntent
 import com.read.mvi.machine.IState
-import com.read.readit.viewModel.TestViewModel
+import kotlinx.coroutines.*
 
-interface ViewState<VM: IStateViewModel<Machine>> {
+@ExperimentalCoroutinesApi
+@FlowPreview
+@InternalCoroutinesApi
+interface ViewState<S : IState, VM : IStateViewModel<S>> {
 
-    fun render(state: IState)
+    fun render(state: S)
 
-    fun provideViewModel(): VM
+    val viewModel: VM
 
     fun observeViewState(lifecycleOwner: LifecycleOwner) {
-        provideViewModel().stateMachine.observeState(lifecycleOwner, Observer {
-            render(it)
-        })
+
+        viewModel
+            .stateMachine
+            .state()
+            .asLiveData()
+            .observe(lifecycleOwner, Observer {
+                render(it)
+            })
     }
 
     fun trigger(intent: IIntent) {
-        provideViewModel().stateMachine.triggerWith(intent)
+
+        viewModel.apply {
+            scope.launch(Dispatchers.IO) {
+                viewModel
+                    .stateMachine
+                    .triggerWith(intent)
+            }
+        }
     }
 }
