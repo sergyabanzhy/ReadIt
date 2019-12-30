@@ -13,7 +13,7 @@ import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 @ExperimentalCoroutinesApi
 @FlowPreview
 @InternalCoroutinesApi
-class ConcreteStateMachine(scope: CoroutineScope, idle: StateScreen1): FiniteMachine<StateScreen1>(ConflatedBroadcastChannel(idle), ActionExecutor(Repo(), scope)) {
+class ConcreteStateMachine(idle: StateScreen1): FiniteMachine<StateScreen1>(ConflatedBroadcastChannel(idle), ActionExecutor(Repo())) {
     override fun getTag(): String {
         return "ConcreteStateMachine"
     }

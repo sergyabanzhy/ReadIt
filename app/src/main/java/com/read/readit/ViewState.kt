@@ -6,6 +6,7 @@ import androidx.lifecycle.asLiveData
 import com.read.mvi.machine.IIntent
 import com.read.mvi.machine.IState
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.take
 
 @ExperimentalCoroutinesApi
 @FlowPreview

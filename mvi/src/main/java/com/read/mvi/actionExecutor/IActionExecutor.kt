@@ -4,5 +4,5 @@ import com.read.mvi.machine.IIntent
 import com.read.mvi.machine.IState
 
 interface IActionExecutor<S: IState> {
-    fun executeAction(state: S, newIntent: suspend (IIntent) -> Unit)
+    suspend fun executeAction(state: S, newIntent: suspend (IIntent) -> Unit)
 }

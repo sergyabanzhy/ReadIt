@@ -26,7 +26,7 @@ sealed class StateScreen1: IState {
     object Fetching : StateScreen1() {
         override val mutate: (intent: IIntent) -> IState = {
             when(it) {
-                is Intent.Fetched -> Fetched1(it.string)
+                is Intent.Fetched -> Fetching2
                 else -> throw RuntimeException()
             }
         }

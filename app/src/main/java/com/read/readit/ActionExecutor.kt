@@ -11,19 +11,14 @@ import com.read.readit.useCase.UseCase
 import com.read.readit.useCase.UseCase2
 import kotlinx.coroutines.*
 
-open class ActionExecutor(private val repo: IRepo, private val scope: CoroutineScope): IActionExecutor<StateScreen1> {
+open class ActionExecutor(private val repo: IRepo) : IActionExecutor<StateScreen1> {
 
-    override fun executeAction(state: StateScreen1, newIntent: suspend ((IIntent) -> Unit)) {
+    override suspend fun executeAction(state: StateScreen1, newIntent: suspend ((IIntent) -> Unit)) {
         Log.d("ActionExecutor", "executeAction")
 
-        scope.launch((Dispatchers.IO)) {
-
-            get(state)?.run {
-                Log.d("ActionExecutor collect", "$this")
-                withContext(Dispatchers.Main) {
-                    newIntent.invoke(this@run)
-                }
-            }
+        get(state)?.run {
+            Log.d("ActionExecutor collect", "$this")
+            newIntent.invoke(this)
         }
     }
 
