@@ -3,9 +3,12 @@ package com.read.readit.state
 import com.read.mvi.machine.IIntent
 import com.read.mvi.machine.IState
 import com.read.mvi.intent.Intent
+import com.read.readit.StateRenderer
 import java.lang.RuntimeException
 
 sealed class StateScreen1: IState {
+
+    abstract fun render(visitor: StateRenderer)
 
     object Idle: StateScreen1() {
         override val mutate: (intent: IIntent) -> IState = {
@@ -13,6 +16,10 @@ sealed class StateScreen1: IState {
                 is Intent.LoadSmth -> Fetching
                 else -> Idle
             }
+        }
+
+        override fun render(visitor: StateRenderer) {
+            visitor.renderState(this)
         }
     }
 
@@ -23,6 +30,10 @@ sealed class StateScreen1: IState {
                 else -> throw RuntimeException()
             }
         }
+
+        override fun render(visitor: StateRenderer) {
+            visitor.renderState(this)
+        }
     }
 
     data class Fetched1(val value: String): StateScreen1() {
@@ -31,6 +42,10 @@ sealed class StateScreen1: IState {
                 is Intent.LoadSmth -> Fetching
                 else -> throw RuntimeException()
             }
+        }
+
+        override fun render(visitor: StateRenderer) {
+            visitor.renderState(this)
         }
     }
 
@@ -41,6 +56,10 @@ sealed class StateScreen1: IState {
                 else -> throw RuntimeException()
             }
         }
+
+        override fun render(visitor: StateRenderer) {
+            visitor.renderState(this)
+        }
     }
 
     object Fetching2: StateScreen1() {
@@ -49,6 +68,10 @@ sealed class StateScreen1: IState {
                 is Intent.Fetched2 -> Fetched2(it.string)
                 else -> throw RuntimeException()
             }
+        }
+
+        override fun render(visitor: StateRenderer) {
+            visitor.renderState(this)
         }
     }
 }

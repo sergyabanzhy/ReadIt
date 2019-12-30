@@ -10,7 +10,7 @@ import kotlinx.coroutines.*
 @ExperimentalCoroutinesApi
 @FlowPreview
 @InternalCoroutinesApi
-interface ViewState<S : IState, VM : IStateViewModel<S>> {
+interface ViewState<S: IState, VM: IStateViewModel<S>>: StateRenderer {
 
     fun render(state: S)
 

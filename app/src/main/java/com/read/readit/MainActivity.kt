@@ -17,6 +17,10 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @InternalCoroutinesApi
 class MainActivity : AppCompatActivity(), ViewState<StateScreen1, TestViewModel> {
 
+    override val viewModel: TestViewModel by lazy {
+        ViewModelProviders.of(this).get(TestViewModel::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -33,17 +37,27 @@ class MainActivity : AppCompatActivity(), ViewState<StateScreen1, TestViewModel>
     }
 
     override fun render(state: StateScreen1) {
-        when(state) {
-            is StateScreen1.Fetching -> Log.d(TAG, "Fetching")
-            is StateScreen1.Fetching2 -> Log.d(TAG, "Fetching2")
-            is StateScreen1.Fetched1 -> Log.d(TAG, "Fetched1")
-            is StateScreen1.Fetched2 -> Log.d(TAG, "Fetched2")
-            is StateScreen1.Idle -> Log.d(TAG, "Idle")
-        }
+        state.render(this)
     }
 
-    override val viewModel: TestViewModel by lazy {
-        ViewModelProviders.of(this).get(TestViewModel::class.java)
+    override fun renderState(state: StateScreen1.Fetching) {
+        Log.d(TAG, "renderState, Fetching")
+    }
+
+    override fun renderState(state: StateScreen1.Fetched2) {
+        Log.d(TAG, "renderState, Fetched2")
+    }
+
+    override fun renderState(state: StateScreen1.Idle) {
+        Log.d(TAG, "renderState, Idle")
+    }
+
+    override fun renderState(state: StateScreen1.Fetched1) {
+        Log.d(TAG, "renderState, Fetched1")
+    }
+
+    override fun renderState(state: StateScreen1.Fetching2) {
+        Log.d(TAG, "renderState, Fetching2")
     }
 
     companion object {
