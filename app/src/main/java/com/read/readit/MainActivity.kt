@@ -34,15 +34,19 @@ class MainActivity : AppCompatActivity(), ViewState<StateScreen1, TestViewModel>
 
     override fun render(state: StateScreen1) {
         when(state) {
-            is StateScreen1.Fetching -> Log.d("MainActivity", "Fetching")
-            is StateScreen1.Fetching2 -> Log.d("MainActivity", "Fetching2")
-            is StateScreen1.Fetched1 -> Log.d("MainActivity", "Fetched1")
-            is StateScreen1.Fetched2 -> Log.d("MainActivity", "Fetched2")
-            is StateScreen1.Idle -> Log.d("MainActivity", "Idle")
+            is StateScreen1.Fetching -> Log.d(TAG, "Fetching")
+            is StateScreen1.Fetching2 -> Log.d(TAG, "Fetching2")
+            is StateScreen1.Fetched1 -> Log.d(TAG, "Fetched1")
+            is StateScreen1.Fetched2 -> Log.d(TAG, "Fetched2")
+            is StateScreen1.Idle -> Log.d(TAG, "Idle")
         }
     }
 
     override val viewModel: TestViewModel by lazy {
         ViewModelProviders.of(this).get(TestViewModel::class.java)
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
     }
 }
