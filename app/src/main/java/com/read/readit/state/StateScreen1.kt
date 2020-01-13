@@ -2,8 +2,8 @@ package com.read.readit.state
 
 import com.read.mvi.machine.IIntent
 import com.read.mvi.machine.IState
-import com.read.mvi.intent.Intent
-import com.read.readit.StateRenderer
+import com.read.readit.intent.Intent
+import com.read.readit.viewModel.StateRenderer
 import java.lang.RuntimeException
 
 sealed class StateScreen1: IState {

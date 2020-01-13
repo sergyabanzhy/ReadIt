@@ -13,9 +13,9 @@ import kotlinx.coroutines.flow.asFlow
 @ExperimentalCoroutinesApi
 @FlowPreview
 @InternalCoroutinesApi
-abstract class FiniteMachine<S: IState>(private var storage: ConflatedBroadcastChannel<S>, private val executor: IActionExecutor<S>) {
+abstract class FiniteMachine<S: IState, I: IIntent>(private var storage: ConflatedBroadcastChannel<S>, private val executor: IActionExecutor<I>) {
 
-    suspend fun triggerWith(intent: IIntent) {
+    suspend fun triggerWith(intent: I) {
 
         val oldState = storage.value
 
@@ -25,8 +25,9 @@ abstract class FiniteMachine<S: IState>(private var storage: ConflatedBroadcastC
                     "oldState ${oldState::class.java.simpleName} -> newState ${newState::class.java.simpleName}")
             storage.offer(newState as S)
 
-            executor.executeAction(storage.value) {
-                triggerWith(it)
+
+            executor.executeAction(intent) {
+                triggerWith(it as I)
             }
 
             }.onMutationIllegal {

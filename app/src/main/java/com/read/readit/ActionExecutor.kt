@@ -2,47 +2,39 @@ package com.read.readit
 
 import android.util.Log
 import com.read.mvi.actionExecutor.IActionExecutor
-import com.read.mvi.intent.Intent
 import com.read.mvi.machine.IIntent
-import com.read.mvi.machine.IState
+import com.read.readit.intent.Intent
 import com.read.readit.repo.IRepo
-import com.read.readit.state.StateScreen1
 import com.read.readit.useCase.UseCase
-import com.read.readit.useCase.UseCase2
-import kotlinx.coroutines.*
 
-open class ActionExecutor(private val repo: IRepo) : IActionExecutor<StateScreen1> {
+class ActionExecutor(private val repo: IRepo): IActionExecutor<Intent>, UseCaseProvider {
 
-    override suspend fun executeAction(state: StateScreen1, newIntent: suspend ((IIntent) -> Unit)) {
+    override suspend fun executeAction(intent: Intent, newIntent: suspend((IIntent) -> Unit)) {
         Log.d("ActionExecutor", "executeAction")
+        intent.dispatch(this, newIntent)
+    }
 
-        get(state)?.run {
-            Log.d("ActionExecutor collect", "$this")
-            newIntent.invoke(this)
+    override suspend fun runUseCaseByIntent(state: Intent.LoadSmth, completion: suspend((IIntent) -> Unit)) {
+        UseCase(repo).execute().right {
+            completion(Intent.Fetched(it))
+        }.left {
+            completion(Intent.Error)
         }
     }
 
-    suspend fun get(state: IState): IIntent? {
-
-        var intent: IIntent? = null
-
-        when (state) {
-            is StateScreen1.Fetching ->
-
-                UseCase(repo).execute().right {
-                    intent = Intent.Fetched(it)
-                }.left {
-                    intent = Intent.Error
-                }
-
-            is StateScreen1.Fetching2 ->
-                UseCase2(repo).execute().right {
-                    intent = Intent.Fetched2(it)
-                }.left {
-                    intent = Intent.Error
-                }
+    override suspend fun runUseCaseByIntent(state: Intent.Fetched2, completion: suspend((IIntent) -> Unit)) {
+        UseCase(repo).execute().right {
+            completion(Intent.Fetched(it))
+        }.left {
+            completion(Intent.Error)
         }
+    }
 
-        return intent
+    override suspend fun runUseCaseByIntent(state: Intent.Idle, completion: suspend((IIntent) -> Unit)) {
+        UseCase(repo).execute().right {
+            completion(Intent.Fetched(it))
+        }.left {
+            completion(Intent.Error)
+        }
     }
 }

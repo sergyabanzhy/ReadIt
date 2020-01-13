@@ -1,4 +1,4 @@
-package com.read.readit
+package com.read.readit.viewModel
 
 import com.read.readit.state.StateScreen1
 

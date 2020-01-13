@@ -1,4 +1,4 @@
-package com.read.readit
+package com.read.mvi.viewState
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -6,12 +6,11 @@ import androidx.lifecycle.asLiveData
 import com.read.mvi.machine.IIntent
 import com.read.mvi.machine.IState
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.take
 
 @ExperimentalCoroutinesApi
 @FlowPreview
 @InternalCoroutinesApi
-interface ViewState<S: IState, VM: IStateViewModel<S>>: StateRenderer {
+interface ViewState<S: IState, I: IIntent, VM: IStateViewModel<S, I>> {
 
     fun render(state: S)
 
@@ -28,7 +27,7 @@ interface ViewState<S: IState, VM: IStateViewModel<S>>: StateRenderer {
             })
     }
 
-    fun trigger(intent: IIntent) {
+    fun trigger(intent: I) {
 
         viewModel.apply {
             scope.launch(Dispatchers.IO) {

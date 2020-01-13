@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.ViewModelProviders
-import com.read.mvi.intent.Intent
+import com.read.readit.intent.Intent
 import com.read.readit.state.StateScreen1
 import com.read.readit.viewModel.TestViewModel
+import com.read.mvi.viewState.ViewState
+import com.read.readit.viewModel.StateRenderer
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -15,7 +17,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @FlowPreview
 @InternalCoroutinesApi
-class MainActivity : AppCompatActivity(), ViewState<StateScreen1, TestViewModel> {
+class MainActivity : AppCompatActivity(), ViewState<StateScreen1, Intent, TestViewModel>, StateRenderer {
 
     override val viewModel: TestViewModel by lazy {
         ViewModelProviders.of(this).get(TestViewModel::class.java)
@@ -46,6 +48,8 @@ class MainActivity : AppCompatActivity(), ViewState<StateScreen1, TestViewModel>
 
     override fun renderState(state: StateScreen1.Fetched2) {
         Log.d(TAG, "renderState, Fetched2")
+
+        tv2.text = state.value
     }
 
     override fun renderState(state: StateScreen1.Idle) {
