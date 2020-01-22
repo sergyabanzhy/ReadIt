@@ -13,8 +13,4 @@ import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 @ExperimentalCoroutinesApi
 @FlowPreview
 @InternalCoroutinesApi
-class ConcreteStateMachine(idle: StateScreen1): FiniteMachine<StateScreen1, Intent>(ConflatedBroadcastChannel(idle), ActionExecutor(Repo())) {
-    override fun getTag(): String {
-        return "ConcreteStateMachine"
-    }
-}
+class ConcreteStateMachine(idle: StateScreen1): FiniteMachine<StateScreen1, Intent>(ConflatedBroadcastChannel(idle), ActionExecutor(Repo()))

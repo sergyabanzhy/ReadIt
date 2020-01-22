@@ -17,7 +17,15 @@ sealed class Intent: IIntent {
 
     data class Fetched(val string: String): Intent()
 
-    data class Fetched2(val string: String): Intent()
+    data class Fetched2(val string: String): Intent() {
+        override suspend fun dispatch(visitor: UseCaseProvider, completion: suspend((IIntent) -> Unit)) {
+            visitor.runUseCaseByIntent(this, completion)
+        }
+    }
 
-    object LoadSmth: Intent()
+    object LoadSmth: Intent() {
+        override suspend fun dispatch(visitor: UseCaseProvider, completion: suspend((IIntent) -> Unit)) {
+            visitor.runUseCaseByIntent(this, completion)
+        }
+    }
 }

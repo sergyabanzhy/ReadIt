@@ -21,8 +21,6 @@ abstract class FiniteMachine<S: IState, I: IIntent>(private var storage: Conflat
 
         oldState.mutate(intent).onMutated { newState  ->
 
-            Log.d(getTag(), "intent ${intent::class.java.simpleName}, " +
-                    "oldState ${oldState::class.java.simpleName} -> newState ${newState::class.java.simpleName}")
             storage.offer(newState as S)
 
 
@@ -31,13 +29,10 @@ abstract class FiniteMachine<S: IState, I: IIntent>(private var storage: Conflat
             }
 
             }.onMutationIllegal {
-                Log.e(getTag(), "onMutationIllegal with intent ${intent::class.java.simpleName}, oldState ${oldState::class.java.simpleName}")
             }
         }
 
     fun state(): Flow<S> {
         return storage.asFlow()
     }
-
-    abstract fun getTag(): String
 }

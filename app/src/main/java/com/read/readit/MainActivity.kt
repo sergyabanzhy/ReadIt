@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.ViewModelProviders
+import com.library.slogger.FileTree
 import com.read.readit.intent.Intent
 import com.read.readit.state.StateScreen1
 import com.read.readit.viewModel.TestViewModel
@@ -13,6 +14,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.InternalCoroutinesApi
+import timber.log.Timber
 
 @ExperimentalCoroutinesApi
 @FlowPreview
@@ -25,6 +27,12 @@ class MainActivity : AppCompatActivity(), ViewState<StateScreen1, Intent, TestVi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Timber.plant(FileTree.Builder()
+            .filesDir(filesDir)
+            .size(1024*1024)
+            .build(), Timber.DebugTree())
+
         setContentView(R.layout.activity_main)
 
         observeViewState(this)
@@ -43,28 +51,24 @@ class MainActivity : AppCompatActivity(), ViewState<StateScreen1, Intent, TestVi
     }
 
     override fun renderState(state: StateScreen1.Fetching) {
-        Log.d(TAG, "renderState, Fetching")
+        Timber.d( "renderState, Fetching")
     }
 
     override fun renderState(state: StateScreen1.Fetched2) {
-        Log.d(TAG, "renderState, Fetched2")
+        Timber.d( "renderState, Fetched2")
 
         tv2.text = state.value
     }
 
     override fun renderState(state: StateScreen1.Idle) {
-        Log.d(TAG, "renderState, Idle")
+        Timber.d("renderState, Idle")
     }
 
     override fun renderState(state: StateScreen1.Fetched1) {
-        Log.d(TAG, "renderState, Fetched1")
+        Timber.d( "renderState, Fetched1")
     }
 
     override fun renderState(state: StateScreen1.Fetching2) {
-        Log.d(TAG, "renderState, Fetching2")
-    }
-
-    companion object {
-        private const val TAG = "MainActivity"
+        Timber.d( "renderState, Fetching2")
     }
 }
